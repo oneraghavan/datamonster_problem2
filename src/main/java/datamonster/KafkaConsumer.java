@@ -1,5 +1,7 @@
 package datamonster;
 
+import com.google.gson.Gson;
+import datamonster.dto.Product;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -13,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class KafkaConsumer {
     private final ConsumerConnector consumer;
     private final String topic;
-    private  ExecutorService executor;
+    private ExecutorService executor;
+
+    Gson gson = new Gson();
 
     class ConsumerTest implements Runnable {
         private KafkaStream m_stream;
@@ -28,7 +32,11 @@ public class KafkaConsumer {
             System.out.println("run thread starting");
             ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
             while (it.hasNext()) {
-                System.out.println(new String(it.next().message()));
+                byte[] productInformationByteArray = it.next().message();
+                String productInformationString = new String(productInformationByteArray);
+                Product product = gson.fromJson(productInformationString, Product.class);
+                System.out.println("===========================");
+                System.out.println(product.getStoreId());
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
         }
@@ -84,6 +92,7 @@ public class KafkaConsumer {
     }
 
     public static void main(String[] args) {
+
         String zooKeeper = "192.168.0.210:2181";
         String groupId = UUID.randomUUID().toString();
         String topic = "datamonster_prices";
