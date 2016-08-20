@@ -15,6 +15,7 @@ public class Product {
     private String availability;
     private String  priceType;
     private String countryCode;
+    private String timestamp;
 
     @Override
     public String toString() {

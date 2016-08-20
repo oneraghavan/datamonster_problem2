@@ -22,7 +22,7 @@ public class CheckerAndNotifierService {
     private SlackNotifier slackNotifier;
     private SMSNotifier smsNotifier;
 
-    public CheckerAndNotifierService() throws IOException {
+    CheckerAndNotifierService() throws IOException {
         slackNotifier = new SlackNotifier();
 
         smsNotifier = new SMSNotifier();
@@ -35,7 +35,7 @@ public class CheckerAndNotifierService {
         }
     }
 
-    public void checkAndNotify(Object object) throws Exception {
+    private void checkAndNotify(Object object) throws Exception {
         Checker checker;
         for (Rule rule : rules) {
 
@@ -48,12 +48,29 @@ public class CheckerAndNotifierService {
             }
             if(checker.check(rule,object)){
                 if(SLACK_NOTIFICATION.equals(rule.getNotification())){
-                    slackNotifier.notify(object.toString());
+                    slackNotifier.notify(makeMessage(rule,object));
                 }else if(SMS_NOTIFICATION.equals(rule.getNotification())){
-                    smsNotifier.notify(object.toString());
+                    smsNotifier.notify(makeMessage(rule,object));
                 }
             }
         }
+    }
+
+    Runnable getCheckAndNotifyRunnable(final Object object){
+        return new Runnable() {
+            public void run() {
+                try {
+                    checkAndNotify(object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+
+    private String makeMessage(Rule rule,Object object){
+        return rule.getName() + "failed for object " + object.toString();
     }
 
 }

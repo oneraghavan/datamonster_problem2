@@ -1,6 +1,6 @@
 package datamonster;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import datamonster.dto.Product;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -12,13 +12,16 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class KafkaConsumer {
     private final ConsumerConnector consumer;
     private final String topic;
     private ExecutorService executor;
 
-    Gson gson = new Gson();
+    ObjectMapper objectMapper = new ObjectMapper();
+    AtomicInteger atomicInteger = new AtomicInteger();
+    ExecutorService checkAndNotifierExecutorService = Executors.newFixedThreadPool(10);
 
     class ConsumerTest implements Runnable {
         private KafkaStream m_stream;
@@ -38,14 +41,18 @@ public class KafkaConsumer {
             while (it.hasNext()) {
                 byte[] productInformationByteArray = it.next().message();
                 String productInformationString = new String(productInformationByteArray);
-                Product product = gson.fromJson(productInformationString, Product.class);
                 try {
-                    checkerAndNotifierService.checkAndNotify(product);
+                    final Product product = objectMapper.readValue(productInformationString, Product.class);
+                    checkAndNotifierExecutorService.submit(checkerAndNotifierService.getCheckAndNotifyRunnable(product));
+                    atomicInteger.addAndGet(1);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    atomicInteger.addAndGet(1);
                 }
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
+            System.out.println("===================");
+            System.out.println(atomicInteger);
         }
     }
 
