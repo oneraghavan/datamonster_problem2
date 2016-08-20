@@ -41,3 +41,7 @@ The system should be scalable to -- large number of price records -- support lar
 Technology
 
 Programming Language: Any language of your choice
+=======
+# Kafka Consumer Sample
+
+Sample Kafka consumer java code.
