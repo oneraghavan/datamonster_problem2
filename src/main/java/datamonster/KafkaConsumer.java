@@ -1,5 +1,6 @@
 package datamonster;
 
+import com.esotericsoftware.yamlbeans.YamlException;
 import com.google.gson.Gson;
 import datamonster.dto.Product;
 import kafka.consumer.ConsumerConfig;
@@ -7,6 +8,7 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,9 +25,12 @@ public class KafkaConsumer {
         private KafkaStream m_stream;
         private int m_threadNumber;
 
-        public ConsumerTest(KafkaStream a_stream, int a_threadNumber) {
+        private CheckerAndNotifierService checkerAndNotifierService;
+
+        public ConsumerTest(KafkaStream a_stream, int a_threadNumber) throws YamlException, FileNotFoundException {
             m_threadNumber = a_threadNumber;
             m_stream = a_stream;
+            checkerAndNotifierService = new CheckerAndNotifierService();
         }
 
         public void run() {
@@ -35,8 +40,11 @@ public class KafkaConsumer {
                 byte[] productInformationByteArray = it.next().message();
                 String productInformationString = new String(productInformationByteArray);
                 Product product = gson.fromJson(productInformationString, Product.class);
-                System.out.println("===========================");
-                System.out.println(product.getStoreId());
+                try {
+                    checkerAndNotifierService.checkAndNotify(product);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
         }
@@ -60,7 +68,7 @@ public class KafkaConsumer {
         }
     }
 
-    public void run(int a_numThreads) {
+    public void run(int a_numThreads) throws YamlException, FileNotFoundException {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(a_numThreads));
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
@@ -91,7 +99,7 @@ public class KafkaConsumer {
         return new ConsumerConfig(props);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws YamlException, FileNotFoundException {
 
         String zooKeeper = "192.168.0.210:2181";
         String groupId = UUID.randomUUID().toString();
