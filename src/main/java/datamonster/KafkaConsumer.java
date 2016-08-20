@@ -5,10 +5,7 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +28,7 @@ public class KafkaConsumer {
             System.out.println("run thread starting");
             ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
             while (it.hasNext()) {
-                System.out.println("Thread " + m_threadNumber + ": " + new String(it.next().message()));
+                System.out.println("new String(it.next().message()));
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
         }
@@ -88,7 +85,7 @@ public class KafkaConsumer {
 
     public static void main(String[] args) {
         String zooKeeper = "192.168.0.210:2181";
-        String groupId = null; // TODO: please provide a valid consumer group id
+        String groupId = UUID.randomUUID().toString();
         String topic = "datamonster_prices";
         int threads = 2; // change as appropriate
 
