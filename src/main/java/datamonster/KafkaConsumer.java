@@ -1,6 +1,5 @@
 package datamonster;
 
-import com.esotericsoftware.yamlbeans.YamlException;
 import com.google.gson.Gson;
 import datamonster.dto.Product;
 import kafka.consumer.ConsumerConfig;
@@ -8,7 +7,7 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +26,7 @@ public class KafkaConsumer {
 
         private CheckerAndNotifierService checkerAndNotifierService;
 
-        public ConsumerTest(KafkaStream a_stream, int a_threadNumber) throws YamlException, FileNotFoundException {
+        public ConsumerTest(KafkaStream a_stream, int a_threadNumber) throws IOException {
             m_threadNumber = a_threadNumber;
             m_stream = a_stream;
             checkerAndNotifierService = new CheckerAndNotifierService();
@@ -68,7 +67,7 @@ public class KafkaConsumer {
         }
     }
 
-    public void run(int a_numThreads) throws YamlException, FileNotFoundException {
+    public void run(int a_numThreads) throws IOException {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(a_numThreads));
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
@@ -99,7 +98,7 @@ public class KafkaConsumer {
         return new ConsumerConfig(props);
     }
 
-    public static void main(String[] args) throws YamlException, FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         String zooKeeper = "192.168.0.210:2181";
         String groupId = UUID.randomUUID().toString();

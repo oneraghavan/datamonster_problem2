@@ -8,4 +8,6 @@ public class Constants {
     public static String GREAT_THAN = "great_than";
     public static String STRICT_COMPARATOR = "double_strict";
     public static String WITHIN_COMPARATOR = "double_within";
+    public static String SLACK_NOTIFICATION = "slack";
+    public static String SMS_NOTIFICATION = "sms";
 }

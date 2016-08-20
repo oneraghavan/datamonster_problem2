@@ -16,5 +16,17 @@ public class Product {
     private String  priceType;
     private String countryCode;
 
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "storeId=" + storeId +
+                ", minSalePrice=" + minSalePrice +
+                ", minListPrice=" + minListPrice +
+                ", title='" + title + '\'' +
+                ", currencyType='" + currencyType + '\'' +
+                ", availability='" + availability + '\'' +
+                ", priceType='" + priceType + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                '}';
+    }
 }

@@ -12,5 +12,5 @@ public class Rule {
     private String field;
     private String comparator;
     private String compared;
-
+    private String notification;
 }

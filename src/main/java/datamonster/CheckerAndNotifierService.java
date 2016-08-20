@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static datamonster.Constants.STRICT_COMPARATOR;
-import static datamonster.Constants.WITHIN_COMPARATOR;
+import static datamonster.Constants.*;
 
 public class CheckerAndNotifierService {
 
@@ -47,8 +46,13 @@ public class CheckerAndNotifierService {
             }else{
                 throw new Exception();
             }
-            System.out.println(rule.getName());
-            System.out.println(checker.check(rule,object));
+            if(checker.check(rule,object)){
+                if(SLACK_NOTIFICATION.equals(rule.getNotification())){
+                    slackNotifier.notify(object.toString());
+                }else if(SMS_NOTIFICATION.equals(rule.getNotification())){
+                    smsNotifier.notify(object.toString());
+                }
+            }
         }
     }
 

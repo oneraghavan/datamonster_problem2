@@ -18,6 +18,6 @@ public class SlackNotifier implements Notifier {
     @Override
     public void notify(String message) {
         SlackChannel channel = session.findChannelByName("alerts");
-        session.sendMessage(channel, "hello");
+        session.sendMessage(channel, message);
     }
 }
