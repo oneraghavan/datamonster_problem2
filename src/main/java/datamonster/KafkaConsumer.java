@@ -28,7 +28,7 @@ public class KafkaConsumer {
             System.out.println("run thread starting");
             ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
             while (it.hasNext()) {
-                System.out.println("new String(it.next().message()));
+                System.out.println(new String(it.next().message()));
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
         }
