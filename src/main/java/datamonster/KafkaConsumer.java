@@ -3,7 +3,7 @@ package datamonster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import datamonster.dto.Product;
-import datamonster.service.CheckerAndNotifierService;
+import datamonster.service.CheckerAndNotifyService;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -30,12 +30,12 @@ public class KafkaConsumer {
         private KafkaStream m_stream;
         private int m_threadNumber;
 
-        private CheckerAndNotifierService checkerAndNotifierService;
+        private CheckerAndNotifyService checkerAndNotifyService;
 
         public ConsumerTest(KafkaStream a_stream, int a_threadNumber) throws IOException {
             m_threadNumber = a_threadNumber;
             m_stream = a_stream;
-            checkerAndNotifierService = new CheckerAndNotifierService();
+            checkerAndNotifyService = new CheckerAndNotifyService();
         }
 
         public void run() {
@@ -48,7 +48,7 @@ public class KafkaConsumer {
                     long now = Instant.now().toEpochMilli();
                     final Product parsedProduct = objectMapper.readValue(productInformationString, Product.class);
                     parsedProduct.setTimestamp(now);
-                    checkAndNotifierExecutorService.submit(checkerAndNotifierService.getCheckAndNotifyRunnable(parsedProduct));
+                    checkAndNotifierExecutorService.submit(checkerAndNotifyService.getCheckAndNotifyRunnable(parsedProduct));
                     atomicInteger.addAndGet(1);
                 } catch (UnrecognizedPropertyException e) {
                     System.out.println("The Data format is not in line with the product");

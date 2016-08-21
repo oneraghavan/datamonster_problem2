@@ -2,10 +2,10 @@ package datamonster;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import datamonster.dto.Product;
-import datamonster.service.CheckerAndNotifierService;
+import datamonster.service.CheckerAndNotifyService;
 import org.junit.Test;
 
-public class CheckerAndNotifierServiceTest {
+public class CheckerAndNotifyServiceTest {
 
     @Test
     public void ShouldTestCheckerBuilder() throws Exception {
@@ -15,8 +15,8 @@ public class CheckerAndNotifierServiceTest {
 
         Product product = objectMapper.readValue(temp, Product.class);
 
-        CheckerAndNotifierService checkerAndNotifierService = new CheckerAndNotifierService();
-        Runnable checkAndNotifyRunnable = checkerAndNotifierService.getCheckAndNotifyRunnable(product);
+        CheckerAndNotifyService checkerAndNotifyService = new CheckerAndNotifyService();
+        Runnable checkAndNotifyRunnable = checkerAndNotifyService.getCheckAndNotifyRunnable(product);
         checkAndNotifyRunnable.run();
     }
 }

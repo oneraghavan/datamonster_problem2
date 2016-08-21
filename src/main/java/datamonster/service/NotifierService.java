@@ -35,23 +35,21 @@ public class NotifierService {
     }
 
     void notifyAsynchronously(final Object object, final Rule rule) throws TwilioRestException {
-        notifierExecutorService.submit(new Runnable() {
-            public void run() {
-                try {
-                    for (String notificaiton : rule.getNotifications()) {
+        for (final String notificaiton : rule.getNotifications()) {
+            notifierExecutorService.submit(new Runnable() {
+                public void run() {
+                    try {
                         if (SLACK_NOTIFICATION.equals(notificaiton)) {
                             slackNotifier.notify(makeMessage(rule, object));
                         } else if (SMS_NOTIFICATION.equals(notificaiton)) {
                             smsNotifier.notify(makeMessage(rule, object));
                         }
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
     }
 
     private String makeMessage(Rule rule, Object object) {

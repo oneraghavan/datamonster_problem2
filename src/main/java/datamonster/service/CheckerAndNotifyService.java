@@ -18,7 +18,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import static datamonster.helper.CheckerHelpers.getRowChecker;
 
-public class CheckerAndNotifierService {
+public class CheckerAndNotifyService {
 
     private List<Rule> rowRules = new ArrayList<Rule>();
     private List<Rule> aggRules = new ArrayList<Rule>();
@@ -34,7 +34,7 @@ public class CheckerAndNotifierService {
 
     NotifierService notifierService = new NotifierService();
 
-    public CheckerAndNotifierService() throws IOException {
+    public CheckerAndNotifyService() throws IOException {
         slackNotifier = new SlackNotifier();
         smsNotifier = new SMSNotifier();
 
