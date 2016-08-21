@@ -4,17 +4,5 @@
     comparator: "less_than_or_equal"
     compared: "0"
     notification : "slack"
----
-    name: "minSalePrice greater than min listprice"
-    type: "double_within"
-    field: "minSalePrice"
-    comparator: "great_than"
-    compared: "minListPrice"
-    notification : "slack"
----
-    name: "storeid greater than 1"
-    type: "double_strict"
-    field: "storeId"
-    comparator: "less_than"
-    compared: 1
-    notification : "sms"
+    isAgg: false
+    aggType: ""

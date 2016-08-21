@@ -8,6 +8,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +22,7 @@ public class KafkaConsumer {
 
     ObjectMapper objectMapper = new ObjectMapper();
     AtomicInteger atomicInteger = new AtomicInteger();
-    ExecutorService checkAndNotifierExecutorService = Executors.newFixedThreadPool(10);
+    ExecutorService checkAndNotifierExecutorService = Executors.newFixedThreadPool(1);
 
     class ConsumerTest implements Runnable {
         private KafkaStream m_stream;
@@ -42,8 +43,10 @@ public class KafkaConsumer {
                 byte[] productInformationByteArray = it.next().message();
                 String productInformationString = new String(productInformationByteArray);
                 try {
-                    final Product product = objectMapper.readValue(productInformationString, Product.class);
-                    checkAndNotifierExecutorService.submit(checkerAndNotifierService.getCheckAndNotifyRunnable(product));
+                    long now = Instant.now().toEpochMilli();
+                    final Product parsedProduct = objectMapper.readValue(productInformationString, Product.class);
+                    parsedProduct.setTimestamp(now);
+                    checkAndNotifierExecutorService.submit(checkerAndNotifierService.getCheckAndNotifyRunnable(parsedProduct));
                     atomicInteger.addAndGet(1);
                 } catch (Exception e) {
                     e.printStackTrace();

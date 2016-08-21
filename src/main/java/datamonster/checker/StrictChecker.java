@@ -5,7 +5,7 @@ import datamonster.dto.Rule;
 
 import java.lang.reflect.Field;
 
-public class StrictChecker implements Checker {
+public class StrictChecker implements RowChecker {
     @Override
     public boolean check(Rule rule, Object object) throws NoSuchFieldException, IllegalAccessException {
         Class<?> objectClass = object.getClass();

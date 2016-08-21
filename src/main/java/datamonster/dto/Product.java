@@ -15,7 +15,7 @@ public class Product {
     private String availability;
     private String  priceType;
     private String countryCode;
-    private String timestamp;
+    private Long timestamp;
 
     @Override
     public String toString() {
@@ -28,6 +28,7 @@ public class Product {
                 ", availability='" + availability + '\'' +
                 ", priceType='" + priceType + '\'' +
                 ", countryCode='" + countryCode + '\'' +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }

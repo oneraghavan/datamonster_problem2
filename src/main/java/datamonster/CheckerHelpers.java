@@ -1,5 +1,10 @@
 package datamonster;
 
+import datamonster.checker.RowChecker;
+import datamonster.checker.StrictChecker;
+import datamonster.checker.WithinChecker;
+import datamonster.dto.Rule;
+
 import static datamonster.Constants.*;
 
 public class CheckerHelpers {
@@ -13,10 +18,22 @@ public class CheckerHelpers {
             return valueToBeCompared >= valueToBeComparedWith;
         } else if (GREAT_THAN.equals(comparator)) {
             return valueToBeCompared > valueToBeComparedWith;
-        }else{
+        } else {
             return false;
         }
-
     }
+
+    public static RowChecker getRowChecker(Rule rule) throws Exception {
+        RowChecker checker;
+        if (STRICT_COMPARATOR.equals(rule.getType())) {
+            checker = new StrictChecker();
+        } else if (WITHIN_COMPARATOR.equals(rule.getType())) {
+            checker = new WithinChecker();
+        } else {
+            throw new Exception();
+        }
+        return checker;
+    }
+
 
 }

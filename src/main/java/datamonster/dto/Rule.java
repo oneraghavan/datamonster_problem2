@@ -13,4 +13,7 @@ public class Rule {
     private String comparator;
     private String compared;
     private String notification;
+    private Boolean isAgg;
+    private String aggType;
+    private Long limit;
 }
