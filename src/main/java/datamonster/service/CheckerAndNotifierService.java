@@ -1,7 +1,6 @@
 package datamonster.service;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
-import com.twilio.sdk.TwilioRestException;
 import datamonster.checker.AggCountBasedChecker;
 import datamonster.checker.AggTimeBasedChecker;
 import datamonster.checker.RowChecker;
@@ -15,13 +14,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import static datamonster.helper.CheckerHelpers.getRowChecker;
-import static datamonster.helper.Constants.SLACK_NOTIFICATION;
-import static datamonster.helper.Constants.SMS_NOTIFICATION;
 
 public class CheckerAndNotifierService {
 
@@ -37,7 +32,7 @@ public class CheckerAndNotifierService {
     AggCountBasedChecker aggCountBasedChecker = new AggCountBasedChecker();
     AggTimeBasedChecker aggTimeBasedChecker = new AggTimeBasedChecker();
 
-    ExecutorService notifierExecutorService = Executors.newFixedThreadPool(1);
+    NotifierService notifierService = new NotifierService();
 
     public CheckerAndNotifierService() throws IOException {
         slackNotifier = new SlackNotifier();
@@ -60,41 +55,23 @@ public class CheckerAndNotifierService {
         for (Rule rule : rowRules) {
             checker = getRowChecker(rule);
             if (checker.check(rule, object)) {
-                notifyAsynchronously(object, rule);
+                notifierService.notifyAsynchronously(object, rule);
             }
         }
 
         for (Rule rule : aggRules) {
+            boolean check;
             if (rule.getAggType().equals("count")) {
-                if (aggCountBasedChecker.check(rule, (Product) object, countBasedPriorityBlockingQueue)) {
-                    notifyAsynchronously(object, rule);
-                }
+                check = aggCountBasedChecker.check(rule, (Product) object, countBasedPriorityBlockingQueue);
             } else if (rule.getAggType().equals("time")) {
-                if (aggTimeBasedChecker.check(rule, (Product) object, timePriorityBlockingQueue)) {
-                    notifyAsynchronously(object, rule);
-                }
+                check = aggTimeBasedChecker.check(rule, (Product) object, timePriorityBlockingQueue);
+            } else {
+                throw new Exception();
+            }
+            if (check) {
+                notifierService.notifyAsynchronously(object, rule);
             }
         }
-    }
-
-    private void notifyAsynchronously(final Object object, final Rule rule) throws TwilioRestException {
-        notifierExecutorService.submit(new Runnable() {
-            public void run() {
-                try {
-                    for (String notificaiton : rule.getNotifications()) {
-                        if (SLACK_NOTIFICATION.equals(notificaiton)) {
-                            slackNotifier.notify(makeMessage(rule, object));
-                        } else if (SMS_NOTIFICATION.equals(notificaiton)) {
-                            smsNotifier.notify(makeMessage(rule, object));
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
 
@@ -111,8 +88,5 @@ public class CheckerAndNotifierService {
     }
 
 
-    private String makeMessage(Rule rule, Object object) {
-        return rule.getName() + "failed for object " + object.toString();
-    }
 
 }
