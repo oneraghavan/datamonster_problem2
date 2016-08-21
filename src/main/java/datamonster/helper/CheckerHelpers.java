@@ -1,11 +1,11 @@
-package datamonster;
+package datamonster.helper;
 
 import datamonster.checker.RowChecker;
 import datamonster.checker.StrictChecker;
 import datamonster.checker.WithinChecker;
 import datamonster.dto.Rule;
 
-import static datamonster.Constants.*;
+import static datamonster.helper.Constants.*;
 
 public class CheckerHelpers {
 

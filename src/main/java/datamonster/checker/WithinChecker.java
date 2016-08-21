@@ -1,6 +1,6 @@
 package datamonster.checker;
 
-import datamonster.CheckerHelpers;
+import datamonster.helper.CheckerHelpers;
 import datamonster.dto.Rule;
 
 import java.lang.reflect.Field;

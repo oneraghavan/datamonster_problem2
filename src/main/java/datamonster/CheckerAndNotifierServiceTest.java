@@ -2,6 +2,7 @@ package datamonster;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import datamonster.dto.Product;
+import datamonster.service.CheckerAndNotifierService;
 import org.junit.Test;
 
 public class CheckerAndNotifierServiceTest {

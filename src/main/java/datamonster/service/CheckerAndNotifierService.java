@@ -1,4 +1,4 @@
-package datamonster;
+package datamonster.service;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.twilio.sdk.TwilioRestException;
@@ -19,9 +19,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import static datamonster.CheckerHelpers.getRowChecker;
-import static datamonster.Constants.SLACK_NOTIFICATION;
-import static datamonster.Constants.SMS_NOTIFICATION;
+import static datamonster.helper.CheckerHelpers.getRowChecker;
+import static datamonster.helper.Constants.SLACK_NOTIFICATION;
+import static datamonster.helper.Constants.SMS_NOTIFICATION;
 
 public class CheckerAndNotifierService {
 
@@ -39,7 +39,7 @@ public class CheckerAndNotifierService {
 
     ExecutorService notifierExecutorService = Executors.newFixedThreadPool(1);
 
-    CheckerAndNotifierService() throws IOException {
+    public CheckerAndNotifierService() throws IOException {
         slackNotifier = new SlackNotifier();
         smsNotifier = new SMSNotifier();
 
@@ -98,7 +98,7 @@ public class CheckerAndNotifierService {
     }
 
 
-    Runnable getCheckAndNotifyRunnable(final Object object) {
+    public Runnable getCheckAndNotifyRunnable(final Object object) {
         return new Runnable() {
             public void run() {
                 try {

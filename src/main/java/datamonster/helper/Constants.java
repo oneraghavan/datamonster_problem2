@@ -1,4 +1,4 @@
-package datamonster;
+package datamonster.helper;
 
 public class Constants {
 
