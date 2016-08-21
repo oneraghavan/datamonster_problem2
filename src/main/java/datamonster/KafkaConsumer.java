@@ -1,6 +1,7 @@
 package datamonster;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import datamonster.dto.Product;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -47,6 +48,10 @@ public class KafkaConsumer {
                     final Product parsedProduct = objectMapper.readValue(productInformationString, Product.class);
                     parsedProduct.setTimestamp(now);
                     checkAndNotifierExecutorService.submit(checkerAndNotifierService.getCheckAndNotifyRunnable(parsedProduct));
+                    atomicInteger.addAndGet(1);
+                } catch (UnrecognizedPropertyException e) {
+                    System.out.println("The Data format is not in line with the product");
+                    System.out.println("The data is " + productInformationString);
                     atomicInteger.addAndGet(1);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -8,3 +8,15 @@
      - sms
     isAgg: false
     aggType: ""
+---
+    name: "Aggregatation based on the count for minSalePrice"
+    type: "double_strict"
+    field: "minSalePrice"
+    comparator: "less_than_or_equal"
+    compared: 0
+    notifications :
+     - slack
+     - sms
+    isAgg: true
+    aggType: "count"
+    limit: 1
