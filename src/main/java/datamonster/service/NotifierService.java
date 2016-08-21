@@ -1,8 +1,6 @@
 package datamonster.service;
 
 import com.twilio.sdk.TwilioRestException;
-import datamonster.checker.AggCountBasedChecker;
-import datamonster.checker.AggTimeBasedChecker;
 import datamonster.dto.Rule;
 import datamonster.notifier.SMSNotifier;
 import datamonster.notifier.SlackNotifier;
@@ -22,15 +20,12 @@ public class NotifierService {
     private SlackNotifier slackNotifier;
     private SMSNotifier smsNotifier;
 
-    AggCountBasedChecker aggCountBasedChecker;
-    AggTimeBasedChecker aggTimeBasedChecker;
 
     public NotifierService() throws IOException {
         slackNotifier = new SlackNotifier();
         smsNotifier = new SMSNotifier();
 
-        aggCountBasedChecker = new AggCountBasedChecker();
-        aggTimeBasedChecker = new AggTimeBasedChecker();
+
 
     }
 
@@ -40,6 +35,7 @@ public class NotifierService {
                 public void run() {
                     try {
                         if (SLACK_NOTIFICATION.equals(notificaiton)) {
+                            Thread.sleep(2000);
                             slackNotifier.notify(makeMessage(rule, object));
                         } else if (SMS_NOTIFICATION.equals(notificaiton)) {
                             smsNotifier.notify(makeMessage(rule, object));

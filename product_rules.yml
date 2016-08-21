@@ -11,7 +11,7 @@
 ---
     name: "Aggregatation based on the count for minSalePrice"
     type: "double_strict"
-    field: "minSalePrice"
+    field: "storeId"
     comparator: "less_than_or_equal"
     compared: 0
     notifications :
@@ -19,4 +19,4 @@
      - sms
     isAgg: true
     aggType: "count"
-    limit: 1
+    limit: 3

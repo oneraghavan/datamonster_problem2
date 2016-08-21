@@ -7,8 +7,6 @@ import datamonster.checker.RowChecker;
 import datamonster.dto.Product;
 import datamonster.dto.Rule;
 import datamonster.dto.TimeStampBasedComparator;
-import datamonster.notifier.SMSNotifier;
-import datamonster.notifier.SlackNotifier;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,8 +21,6 @@ public class CheckerAndNotifyService {
     private List<Rule> rowRules = new ArrayList<Rule>();
     private List<Rule> aggRules = new ArrayList<Rule>();
 
-    private SlackNotifier slackNotifier;
-    private SMSNotifier smsNotifier;
     TimeStampBasedComparator timeStampBasedComparator = new TimeStampBasedComparator();
     PriorityBlockingQueue<Product> countBasedPriorityBlockingQueue = new PriorityBlockingQueue<Product>(1, timeStampBasedComparator);
     PriorityBlockingQueue<Product> timePriorityBlockingQueue = new PriorityBlockingQueue<Product>(1, timeStampBasedComparator);
@@ -35,8 +31,6 @@ public class CheckerAndNotifyService {
     NotifierService notifierService = new NotifierService();
 
     public CheckerAndNotifyService() throws IOException {
-        slackNotifier = new SlackNotifier();
-        smsNotifier = new SMSNotifier();
 
         YamlReader reader = new YamlReader(new FileReader("product_rules.yml"));
         while (true) {
@@ -86,7 +80,6 @@ public class CheckerAndNotifyService {
             }
         };
     }
-
 
 
 }
