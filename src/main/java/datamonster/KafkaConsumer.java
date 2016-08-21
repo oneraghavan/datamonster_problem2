@@ -54,7 +54,6 @@ public class KafkaConsumer {
                 }
             }
             System.out.println("Shutting down Thread: " + m_threadNumber);
-            System.out.println("===================");
             System.out.println(atomicInteger);
         }
     }

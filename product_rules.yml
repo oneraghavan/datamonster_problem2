@@ -3,6 +3,8 @@
     field: "minSalePrice"
     comparator: "less_than_or_equal"
     compared: "0"
-    notification : "slack"
+    notifications :
+     - slack
+     - sms
     isAgg: false
     aggType: ""

@@ -3,6 +3,8 @@ package datamonster.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class Rule {
@@ -12,7 +14,7 @@ public class Rule {
     private String field;
     private String comparator;
     private String compared;
-    private String notification;
+    private List<String> notifications;
     private Boolean isAgg;
     private String aggType;
     private Long limit;

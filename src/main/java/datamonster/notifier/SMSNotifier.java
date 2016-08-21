@@ -1,7 +1,6 @@
 package datamonster.notifier;
 
 import com.twilio.sdk.TwilioRestClient;
-import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -16,7 +15,7 @@ public class SMSNotifier implements Notifier {
 
 
     @Override
-    public void notify(String message) throws TwilioRestException {
+    public void notify(String message) {
 
         TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
 

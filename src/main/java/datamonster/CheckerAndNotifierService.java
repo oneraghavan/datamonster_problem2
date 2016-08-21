@@ -81,10 +81,13 @@ public class CheckerAndNotifierService {
         notifierExecutorService.submit(new Runnable() {
             public void run() {
                 try {
-                    if (SLACK_NOTIFICATION.equals(rule.getNotification())) {
-                        slackNotifier.notify(makeMessage(rule, object));
-                    } else if (SMS_NOTIFICATION.equals(rule.getNotification())) {
-                        smsNotifier.notify(makeMessage(rule, object));
+                    for (String notificaiton : rule.getNotifications()) {
+                        if (SLACK_NOTIFICATION.equals(notificaiton)) {
+                            slackNotifier.notify(makeMessage(rule, object));
+                        } else if (SMS_NOTIFICATION.equals(notificaiton)) {
+                            smsNotifier.notify(makeMessage(rule, object));
+                        }
+
                     }
 
                 } catch (Exception e) {
